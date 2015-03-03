@@ -1,0 +1,17 @@
+##
+# drush tasks
+#
+---
+- name: Installing dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - git
+    - mysql-client
+  sudo: yes
+  sudo_user: root
+
+- name: Install drush
+  shell: >
+    composer global require drush/drush:{{ drush_version }}
+  environment:
+    TERM: xterm
