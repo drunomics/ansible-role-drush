@@ -3,7 +3,7 @@
 #
 ---
 - name: Installing dependencies
-  apt: pkg={{ item }} state=latest
+  apt: pkg={{ item }} state=present
   with_items:
     - git
     - mysql-client
