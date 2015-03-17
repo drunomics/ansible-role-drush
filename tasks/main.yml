@@ -15,3 +15,10 @@
     composer global require drush/drush:{{ drush_version }}
   environment:
     TERM: xterm
+
+- name: Add a drush wrapper script
+  shell: |
+    echo '#!/bin/bash
+    {{ drush_script_path }} $@' > /usr/local/bin/drush
+    chmod +x /usr/local/bin/drush
+    creates=/usr/local/bin/drush
