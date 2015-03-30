@@ -3,7 +3,7 @@
 #
 ---
 - name: Installing dependencies
-  apt: pkg={{ item }} state=present
+  apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=86400
   with_items:
     - git
     - mysql-client
