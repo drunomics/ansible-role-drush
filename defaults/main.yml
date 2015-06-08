@@ -1,5 +1,5 @@
 ---
 
 #drush_version: dev-master
-drush_version: 6.*
+drush_version: 7.*
 drush_script_path: /root/.composer/vendor/bin/drush
