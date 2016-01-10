@@ -3,7 +3,7 @@
 #
 ---
 - name: Installing dependencies
-  apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=86400
+  apt: pkg={{ item }} state=present
   with_items:
     - git
     - mysql-client
@@ -13,12 +13,16 @@
 - name: Install drush
   shell: >
     composer global require drush/drush:{{ drush_version }}
+    creates={{ drush_script_path }}
   environment:
     TERM: xterm
 
-- name: Add a drush wrapper script
+- name: Register system-wide drush launcher
   shell: |
     echo '#!/bin/bash
-    {{ drush_script_path }} $@' > /usr/local/bin/drush
-    chmod +x /usr/local/bin/drush
-    creates=/usr/local/bin/drush
+    {{ drush_script_path }} $@' > {{ drush_system_launcher_path }}
+    chmod +x {{ drush_system_launcher_path }}
+    creates={{ drush_system_launcher_path }}
+  when: drush_add_system_launcher|bool
+  sudo: yes
+  sudo_user: root

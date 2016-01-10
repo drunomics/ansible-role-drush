@@ -1,0 +1,4 @@
+---
+drush_script_path: "{{ composer_home_path|default('~/.composer') }}/vendor/bin/drush"
+composer_home_owner: "{{ ansible_user_id }}"
+composer_home_group: "{{ ansible_user_id }}"

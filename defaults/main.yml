@@ -2,4 +2,5 @@
 
 #drush_version: dev-master
 drush_version: 6.*
-drush_script_path: /root/.composer/vendor/bin/drush
+drush_add_system_launcher: false
+drush_system_launcher_path: /usr/local/bin/drush
