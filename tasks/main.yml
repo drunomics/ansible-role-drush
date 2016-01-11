@@ -12,6 +12,7 @@
 
 - name: Install drush
   shell: >
+    COMPOSER_HOME={{ composer_home_path|default('~/.composer') }} \
     composer global require drush/drush:{{ drush_version }}
     creates={{ drush_script_path }}
   environment:
@@ -19,8 +20,9 @@
 
 - name: Register system-wide drush launcher
   shell: |
-    echo '#!/bin/bash
-    {{ drush_script_path }} $@' > {{ drush_system_launcher_path }}
+    SCRIPT=$(readlink -f {{ drush_script_path }})
+    echo "#!/bin/bash
+    $SCRIPT \$@" > {{ drush_system_launcher_path }}
     chmod +x {{ drush_system_launcher_path }}
     creates={{ drush_system_launcher_path }}
   when: drush_add_system_launcher|bool

@@ -3,5 +3,6 @@
   sudo: true
   vars:
     drush_add_system_launcher: true
+    composer_home_path: /opt/composer
   roles:
     - self

@@ -1,5 +1,8 @@
 ---
-
 drush_version: 8.*
+# Optionally register a system-wide launcher. Use only when installed as root.
 drush_add_system_launcher: false
 drush_system_launcher_path: /usr/local/bin/drush
+drush_script_path: "{{ composer_home_path|default('~/.composer') }}/vendor/bin/drush"
+composer_home_owner: "{{ ansible_user_id }}"
+composer_home_group: "{{ ansible_user_id }}"
