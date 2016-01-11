@@ -2,3 +2,4 @@
 
 dependencies:
   - role: kosssi.composer
+    tags: dependency
