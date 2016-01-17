@@ -7,8 +7,8 @@
   with_items:
     - git
     - mysql-client
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
 
 - name: Install drush
   shell: >
@@ -26,5 +26,5 @@
     chmod +x {{ drush_system_launcher_path }}
     creates={{ drush_system_launcher_path }}
   when: drush_add_system_launcher|bool
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
