@@ -1,0 +1,16 @@
+# Playbook for installing all test dependencies.
+---
+- hosts: all
+
+  vars:
+    travis: "{{ lookup('file', '../.travis.yml')|from_yaml }}"
+
+  tasks:
+    - name: Install docker.py for ansible docker module
+      pip: name=docker-py state=present
+      become: true
+
+    - name: Install ansible role dependencies
+      shell: >
+        ansible-galaxy install kosssi.composer
+        creates=roles/kosssi.composer

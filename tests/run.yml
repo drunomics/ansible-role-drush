@@ -1,0 +1,19 @@
+# Ansible playbook for running the tests as travis.ci.
+#
+# We use ansible to run the tests.
+---
+- hosts: all
+  vars:
+    travis: "{{ lookup('file', '../.travis.yml')|from_yaml }}"
+    docker_image: ubuntu-ansible
+
+  tasks:
+  - name: Registers hosts bases on the defined travis environements.
+    add_host:
+      hostname: "{{ item.playbook }}"
+      groups: travis_env
+      ansible_connection: local
+      travis_env: "{{ item }}"
+    with_items: travis.env
+
+- include: run-container.yml

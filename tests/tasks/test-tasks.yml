@@ -1,0 +1,19 @@
+# Ansible task file holding all commands to run
+# Commands are run for each test in the container.
+#
+# Required variables:
+# - playbook: the name of the playbook to execute.
+---
+- name: Check the role/playbook's syntax.
+  shell: >
+    ansible-playbook {{ playbook }} --syntax-check
+# Run the role/playbook with ansible-playbook.
+- ansible-playbook {{ playbook }}
+# Run the role/playbook again, checking to make sure it's idempotent.
+- >
+  ansible-playbook {{ playbook }} --skip-tags dependency
+  | grep -q 'changed=0.*failed=0'
+  && (echo 'Idempotence test: pass' && exit 0)
+  || (echo 'Idempotence test: fail' && exit 1)
+# Check if drush is installed and working.
+- drush --version

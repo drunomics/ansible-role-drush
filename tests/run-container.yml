@@ -1,0 +1,71 @@
+# Runs tests in a single container.
+#
+# To run tests with all environment variables set via the environment (e.g.
+# when run via travis), run it via
+#   ansible-playbook -i inventory_travis run-container.yml
+#
+# To run multiple tests via ansible, respective hosts can be registered in
+# the group "travis_env".
+---
+- hosts: travis_env
+  serial: 1
+  vars:
+    # Define a variable for reading test "env" variables either from a
+    # pre-defined "travis_env" variable or ansible's environment.
+    env: "{{ travis_env|default(ansible_env) }}"
+    docker_image: ubuntu-ansible
+  tasks:
+  - block:
+    - name: Start container.
+      docker:
+        name: "ansible-run-test-{{ env.playbook }}"
+        image: "{{ docker_image }}"
+        state: reloaded
+        volumes:
+          - "{{ ansible_env.PWD }}/..:/root/role"
+        env: "{{ env }}"
+
+    - name: Check the role/playbook's syntax.
+      shell: >
+        docker exec ansible-run-test-{{ env.playbook }}
+        ansible-playbook /root/role/tests/{{ env.playbook }} --syntax-check
+      register: result
+
+    - name: Run the role/playbook with ansible-playbook.
+      shell: >
+        docker exec ansible-run-test-{{ env.playbook }}
+        ansible-playbook /root/role/tests/{{ env.playbook }}
+      register: result
+
+    - name: Run the role/playbook again, checking to make sure it's idempotent.
+      shell: >
+        docker exec ansible-run-test-{{ env.playbook }}
+        ansible-playbook /root/role/tests/{{ env.playbook }} --skip-tags dependency | grep -q 'changed=0.*failed=0' \
+          && (echo 'Idempotence test: pass' && exit 0) \
+          || (echo 'Idempotence test: fail' && exit 1)
+      register: result
+
+    - name: Check if drush is installed and working.
+      shell: >
+        docker exec ansible-run-test-{{ env.playbook }}
+        drush --version
+      register: result
+
+    rescue:
+      - name: Pretty-print stdout.
+        debug: var=result.stdout_lines
+      - name: Pretty-print errors.
+        debug: var=result.stderr
+        failed_when: true
+
+    always:
+      - name: (Quickly) stop testing container.
+        docker:
+          name: "ansible-run-test-{{ env.playbook }}"
+          image: "{{ docker_image }}"
+          state: killed
+      - name: Remove testing container.
+        docker:
+          name: "ansible-run-test-{{ env.playbook }}"
+          image: "{{ docker_image }}"
+          state: absent
