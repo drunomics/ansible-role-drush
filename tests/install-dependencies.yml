@@ -7,7 +7,7 @@
 
   tasks:
     - name: Install docker.py for ansible docker module
-      pip: name=docker-py state=present
+      pip: name=docker-py state=present version=1.5.0
       become: true
 
     - name: Install ansible role dependencies

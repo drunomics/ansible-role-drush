@@ -48,7 +48,6 @@
     - name: Check if drush is installed and working.
       shell: >
         docker exec ansible-run-test-{{ env.playbook }}
-        apt-get install php5-cli && \
         drush --version
       register: result
 

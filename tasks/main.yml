@@ -2,15 +2,16 @@
 # drush tasks
 #
 ---
-- name: Installing dependencies
+- name: Install dependencies.
   apt: pkg={{ item }} state=present
   with_items:
     - git
     - mysql-client
+    - php5-cli
   become: yes
   become_user: root
 
-- name: Install drush
+- name: Install drush via composer.
   shell: >
     COMPOSER_HOME={{ composer_home_path|default('~/.composer') }} \
     composer global require drush/drush:{{ drush_version }}
@@ -18,7 +19,7 @@
   environment:
     TERM: xterm
 
-- name: Register system-wide drush launcher
+- name: Register system-wide drush launcher.
   shell: |
     SCRIPT=$(readlink -f {{ drush_script_path }})
     echo "#!/bin/bash
