@@ -13,7 +13,7 @@
     # Define a variable for reading test "env" variables either from a
     # pre-defined "travis_env" variable or ansible's environment.
     env: "{{ travis_env|default(ansible_env) }}"
-    docker_image: ubuntu-ansible
+    docker_image: drunomics/ubuntu-ansible
   tasks:
   - block:
     - name: Start container.
