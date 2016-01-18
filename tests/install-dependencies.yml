@@ -4,13 +4,18 @@
 
   vars:
     travis: "{{ lookup('file', '../.travis.yml')|from_yaml }}"
+    role_meta: "{{ lookup('file', '../meta/main.yml')|from_yaml }}"
 
   tasks:
     - name: Install docker.py for ansible docker module
       pip: name=docker-py state=present version=1.5.0
       become: true
+      tags: docker-py
 
     - name: Install ansible role dependencies
       shell: >
-        ansible-galaxy install kosssi.composer
-        creates=roles/kosssi.composer
+        ansible-galaxy install {{ item.role }}
+        creates=roles/{{ item.role }}
+      with_items: role_meta.dependencies
+      when: role_meta.dependencies is defined
+      tags: dependencies

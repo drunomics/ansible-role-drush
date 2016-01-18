@@ -25,13 +25,13 @@
           - "{{ ansible_env.PWD }}/..:/root/role"
         env: "{{ env }}"
 
-    - name: Check the role/playbook's syntax.
+    - name: Check the role/playbook's syntax
       shell: >
         docker exec ansible-run-test-{{ env.playbook }}
         ansible-playbook /root/role/tests/{{ env.playbook }} --syntax-check
       register: result
 
-    - name: Run the role/playbook with ansible-playbook.
+    - name: Run the role/playbook with ansible-playbook
       shell: >
         docker exec ansible-run-test-{{ env.playbook }}
         ansible-playbook /root/role/tests/{{ env.playbook }}
@@ -45,26 +45,26 @@
           || (echo 'Idempotence test: fail' && exit 1)
       register: result
 
-    - name: Check if drush is installed and working.
+    - name: Check if drush is installed and working
       shell: >
         docker exec ansible-run-test-{{ env.playbook }}
         drush --version
       register: result
 
     rescue:
-      - name: Pretty-print stdout.
+      - name: Pretty-print stdout
         debug: var=result.stdout_lines
-      - name: Pretty-print errors.
+      - name: Pretty-print errors
         debug: var=result.stderr
         failed_when: true
 
     always:
-      - name: (Quickly) stop testing container.
+      - name: (Quickly) stop testing container
         docker:
           name: "ansible-run-test-{{ env.playbook }}"
           image: "{{ docker_image }}"
           state: killed
-      - name: Remove testing container.
+      - name: Remove testing container
         docker:
           name: "ansible-run-test-{{ env.playbook }}"
           image: "{{ docker_image }}"
