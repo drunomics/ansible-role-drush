@@ -16,4 +16,4 @@ install:
   - ansible-playbook install-dependencies.yml
 
 script:
-  - ansible-playbook -i inventory_travis run-container.yml
+  - ansible-playbook run-container.yml

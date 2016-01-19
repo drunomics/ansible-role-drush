@@ -1,3 +1,0 @@
-; Inventory for running run-container.yml with local enviornment.
-[travis_env]
-localhost ansible_connection=local

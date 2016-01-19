@@ -2,12 +2,13 @@
 #
 # To run tests with all environment variables set via the environment (e.g.
 # when run via travis), run it via
-#   ansible-playbook -i inventory_travis run-container.yml
+#   ansible-playbook run-container.yml
 #
-# To run multiple tests via ansible, respective hosts can be registered in
-# the group "travis_env".
+# To run a certain number of tests via ansible, respective hosts can be
+# registered in a group, whiches name must be set to the variable
+# "limit_groups". See run.yml for an example.
 ---
-- hosts: travis_env
+- hosts: all:&{{ limit_groups|default('all') }}
   serial: 1
   vars:
     # Define a variable for reading test "env" variables either from a

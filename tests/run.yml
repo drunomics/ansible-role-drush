@@ -16,4 +16,4 @@
       travis_env: "{{ item }}"
     with_items: travis.env
 
-- include: run-container.yml
+- include: run-container.yml limit_groups=travis_env
