@@ -7,3 +7,10 @@
 
   roles:
     - self
+
+  post_tasks:
+    - name: Assert drush is installed and working
+      shell: >
+        drush --version
+      tags:
+        - assert

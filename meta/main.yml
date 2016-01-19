@@ -3,3 +3,5 @@
 dependencies:
   - role: kosssi.composer
     tags: [ dependency, composer ]
+    become: true
+    become_user: "{{ composer_become_user|default('root') }}"

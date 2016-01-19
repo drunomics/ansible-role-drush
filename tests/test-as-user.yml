@@ -1,0 +1,18 @@
+---
+- hosts: all
+
+  pre_tasks:
+    - name: Add drunomics user
+      user: name=drunomics
+
+  roles:
+    - { role: self,  become: true, become_user: drunomics }
+
+  post_tasks:
+    - name: Assert drush is installed and working
+      shell: >
+        ~/.composer/vendor/bin/drush --version
+      become_user: drunomics
+      become: true
+      tags:
+        - assert

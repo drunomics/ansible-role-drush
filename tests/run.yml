@@ -8,7 +8,7 @@
     docker_image: ubuntu-ansible
 
   tasks:
-  - name: Registers hosts bases on the defined travis environements
+  - name: Registers hosts based on the defined travis environements
     add_host:
       hostname: "{{ item.playbook }}"
       groups: travis_env

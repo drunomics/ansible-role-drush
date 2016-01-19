@@ -24,7 +24,6 @@
         state: reloaded
         volumes:
           - "{{ ansible_env.PWD }}/..:/root/role"
-        env: "{{ env }}"
 
     - name: Check the role/playbook's syntax
       shell: >
@@ -41,15 +40,9 @@
     - name: Run the role/playbook again, checking to make sure it's idempotent.
       shell: >
         docker exec ansible-run-test-{{ env.playbook }}
-        ansible-playbook /root/role/tests/{{ env.playbook }} --skip-tags dependency | grep -q 'changed=0.*failed=0' \
+        ansible-playbook /root/role/tests/{{ env.playbook }} --skip-tags dependency,assert | grep -q 'changed=0.*failed=0' \
           && (echo 'Idempotence test: pass' && exit 0) \
           || (echo 'Idempotence test: fail' && exit 1)
-      register: result
-
-    - name: Check if drush is installed and working
-      shell: >
-        docker exec ansible-run-test-{{ env.playbook }}
-        drush --version
       register: result
 
     rescue:
@@ -65,8 +58,10 @@
           name: "ansible-run-test-{{ env.playbook }}"
           image: "{{ docker_image }}"
           state: killed
+        tags: clean-up
       - name: Remove testing container
         docker:
           name: "ansible-run-test-{{ env.playbook }}"
           image: "{{ docker_image }}"
           state: absent
+        tags: clean-up

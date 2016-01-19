@@ -6,6 +6,7 @@ services:
   - docker
 env:
   - playbook: test-as-root.yml
+  - playbook: test-as-user.yml
 
 before_install:
   # Install Ansible.
