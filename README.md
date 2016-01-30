@@ -1,13 +1,17 @@
 # Ansible role drunomics.drush
 [![Build Status](https://travis-ci.org/drunomics/ansible-role-drush.svg?branch=master)](https://travis-ci.org/drunomics/ansible-role-drush)
 
-Ansible role that installs drush.
+Ansible role that installs drush via composer.
 
 Distribution: Ubuntu
 
 ## Requirements
 
-- PHP must be installed.
+- PHP must be installed. This is not covered by this role.
+
+## Dependencies
+
+- kosssi.composer (Installs composer.)
 
 ## Usage
 Note that this role can be used as root or on a per user basis by not specifying
