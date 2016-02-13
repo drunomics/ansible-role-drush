@@ -1,6 +1,6 @@
 # Playbook for installing all test dependencies.
 ---
-- hosts: all
+- hosts: all:&{{ limit_groups | default('local') }}
 
   vars:
     travis: "{{ lookup('file', '../.travis.yml')|from_yaml }}"

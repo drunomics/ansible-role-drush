@@ -1,5 +1,6 @@
+# The playbook requires a running container, see run-container.yml.
 ---
-- hosts: all
+- hosts: all:&{{ limit_groups | default('container') }}
   become: true
   vars:
     drush_add_system_launcher: true

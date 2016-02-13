@@ -17,4 +17,12 @@ install:
   - ansible-playbook install-dependencies.yml
 
 script:
-  - ansible-playbook run-container.yml
+  # Startup a container and run the playbook. Then, we run the playbook again
+  # to ensure it's idempotent. Finally, we stop and remove the container again.
+  - ansible-playbook run-container.yml --tags start
+  - ansible-playbook $playbook
+  - >
+    ansible-playbook $playbook --skip-tags dependency,assert | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: PASSED' && exit 0)
+    || (echo 'Idempotence test: FAILED' && exit 1)
+  - ansible-playbook run-container.yml --tags remove
