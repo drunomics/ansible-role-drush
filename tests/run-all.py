@@ -15,6 +15,16 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+# Install role dependencies only, so we do not require sudo.
+print bcolors.HEADER + "Installing role dependencies" + bcolors.ENDC
+subprocess.Popen(['ansible-playbook', 'install-dependencies.yml', '--tags=dependencies']).wait()
+
+# Bail out if docker-py is missing.
+result = subprocess.Popen(['bash', '-c', 'pip list | grep docker-py']).wait()
+if result > 0:
+  raise SystemExit(bcolors.FAIL + "Error: Missing the required python module docker-py. To install, run:\n  ansible-playbook install-dependencies.yml -K" + bcolors.ENDC)
+
+
 exit_code = 0
 stream = open("../.travis.yml", "r")
 travis = yaml.load(stream)
