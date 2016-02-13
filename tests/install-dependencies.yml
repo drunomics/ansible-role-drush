@@ -3,7 +3,6 @@
 - hosts: all:&{{ limit_groups | default('local') }}
 
   vars:
-    travis: "{{ lookup('file', '../.travis.yml')|from_yaml }}"
     role_meta: "{{ lookup('file', '../meta/main.yml')|from_yaml }}"
 
   tasks:
