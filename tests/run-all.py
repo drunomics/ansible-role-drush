@@ -15,6 +15,9 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+# Ensure the working directory is our directory.
+os.chdir(os.path.dirname(sys.argv[0]))
+
 # Install role dependencies only, so we do not require sudo.
 print bcolors.HEADER + "Installing role dependencies" + bcolors.ENDC
 subprocess.Popen(['ansible-playbook', 'install-dependencies.yml', '--tags=dependencies']).wait()
