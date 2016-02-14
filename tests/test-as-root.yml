@@ -6,6 +6,9 @@
     drush_add_system_launcher: true
     composer_home_path: /opt/composer
 
+  pre_tasks:
+    - apt: pkg=php5-cli state=present
+
   roles:
     - self
 

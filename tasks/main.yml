@@ -7,7 +7,6 @@
   with_items:
     - git
     - mysql-client
-    - php5-cli
   become: yes
   become_user: root
 
