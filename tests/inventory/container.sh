@@ -13,7 +13,8 @@ cat <<end-of-json
     "container"   : {
         "hosts"   : [ "$CONTAINER_NAME" ],
         "vars"    : {
-            "ansible_connection"   : docker
+            "ansible_connection"   : docker,
+            "ansible_user"         : root
         }
     }
 }
