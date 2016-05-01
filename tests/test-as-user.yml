@@ -1,18 +1,39 @@
 # The playbook requires a running container, see run-container.yml.
 ---
 - hosts: all:&{{ limit_groups | default('container') }}
+  vars:
+    composer_path: "~/bin/composer"
 
   pre_tasks:
     - name: Add drunomics user
       user: name=drunomics
     - apt: pkg=php5-cli state=present
 
+      # Required for composer to be able to put its bin there.
+    - name: Make sure bin directory is there
+      file: path=~/bin state=directory
+      become: true
+      become_user: drunomics
+
+    - name: Add per-user bin to the path
+      lineinfile: >
+        dest="~/.bashrc" state=present regexp="export PATH"
+        line='export PATH=~/bin:~/.composer/vendor/bin:$PATH'
+      become: true
+      become_user: drunomics
+
+    # Work-a-round which is needed as ansible executes via sudo which does not
+    # respect per-user paths.
+    - name: Put composer into global path
+      file: src=~drunomics/bin/composer dest=/usr/local/bin/composer state=link force=yes
+
   roles:
     - role: self
       become: true
       become_user: drunomics
-      # Install composer as root to make sure it is in the path.
-      composer_become_user: root
+      composer_become_user: drunomics
+      composer_home_owner: drunomics
+      composer_home_group: drunomics
 
   post_tasks:
     - name: Assert drush is installed and working
