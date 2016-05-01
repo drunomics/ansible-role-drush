@@ -15,6 +15,6 @@
       shell: >
         ansible-galaxy install {{ item.role }}
         creates=roles/{{ item.role }}
-      with_items: role_meta.dependencies
+      with_items: "{{ role_meta.dependencies }}"
       when: role_meta.dependencies is defined
       tags: dependencies

@@ -10,13 +10,20 @@
   become: yes
   become_user: root
 
-- name: Install drush via composer.
-  shell: >
-    COMPOSER_HOME={{ composer_home_path|default('~/.composer') }} \
-    composer global require drush/drush:{{ drush_version }}
-    creates={{ drush_script_path }}
+- name: Determine global composer home
+  shell: "echo $HOME/.composer"
+  changed_when: false
+  register: result
+
+- name: Install drush
+  composer:
+    command: "require"
+    arguments: "drush/drush={{ drush_version }} --update-with-dependencies"
+    working_dir: "{{ composer_home_path|default(composer_home_path_default) }}"
+  vars:
+    composer_home_path_default: '{{ result.stdout }}'
   environment:
-    TERM: xterm
+    COMPOSER_DISCARD_CHANGES: 1
 
 - name: Register system-wide drush launcher.
   shell: |

@@ -8,7 +8,11 @@
     - apt: pkg=php5-cli state=present
 
   roles:
-    - { role: self,  become: true, become_user: drunomics }
+    - role: self
+      become: true
+      become_user: drunomics
+      # Install composer as root to make sure it is in the path.
+      composer_become_user: root
 
   post_tasks:
     - name: Assert drush is installed and working
