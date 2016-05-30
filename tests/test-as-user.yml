@@ -1,8 +1,6 @@
 # The playbook requires a running container, see run-container.yml.
 ---
 - hosts: all:&{{ limit_groups | default('container') }}
-  vars:
-    composer_path: "~/bin/composer"
 
   pre_tasks:
     - name: Add drunomics user
@@ -34,6 +32,8 @@
       composer_become_user: drunomics
       composer_home_owner: drunomics
       composer_home_group: drunomics
+      composer_path: "~/bin/composer"
+      composer_home_path: ~/.composer
 
   post_tasks:
     - name: Assert drush is installed and working
