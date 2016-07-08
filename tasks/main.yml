@@ -7,6 +7,7 @@
   with_items:
     - git
     - mysql-client
+    - acl
   become: yes
   become_user: root
 
