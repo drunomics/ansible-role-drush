@@ -9,6 +9,7 @@
     - mysql-client
   become: yes
   become_user: root
+  when: not drush_skip_root_setup
 
 - name: Determine global composer home
   shell: "echo $HOME/.composer"
@@ -32,6 +33,6 @@
     $SCRIPT \$@" > {{ drush_system_launcher_path }}
     chmod +x {{ drush_system_launcher_path }}
     creates={{ drush_system_launcher_path }}
-  when: drush_add_system_launcher|bool
+  when: drush_add_system_launcher|bool and not drush_skip_root_setup
   become: yes
   become_user: root

@@ -4,3 +4,7 @@ drush_version: 8.*
 drush_add_system_launcher: false
 drush_system_launcher_path: /usr/local/bin/drush
 drush_script_path: "{{ composer_home_path|default('~/.composer') }}/vendor/bin/drush"
+
+# Allows skipping operations that require root access. This is installing
+# dependencies and drush_add_system_launcher if set.
+drush_skip_root_setup: false
